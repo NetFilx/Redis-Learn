@@ -782,11 +782,15 @@ maxmemory-samples 3
 appendonly no
 ```
 
+如果需要启用aof，则需要将以上的配置从no改成yes
+
 我们还可以设置aof文件的名称：
 
 ```
 appendfilename "appendonly.aof"
 ```
+
+默认情况下，appendfile和rdb文件是放在同一个目录下的，设置就是在上面的那个dir
 
 fsync()调用，用来告诉操作系统立即将缓存的指令写入磁盘。一些操作系统会“立即”进行，而另外一些操作系统则会“尽快”进行。
 redis支持三种不同的模式：
@@ -908,3 +912,9 @@ aof-rewrite-incremental-fsync yes
 ```
 
 至此，redis的入门内容就结束了，内容实在不少，但相对来说都很基础，本文没有涉及redis集群、redis工作原理、redis源码、redis相关LIB库等内容
+
+# 坑点
+
+1. aof文件位置
+
+   一开始我开启了aof的appendonly，但是我发现关闭了redis-server和redis-cli在当前目录下并没有生成*.aof，我在redis-cli下输了save依然没有出现，后来发现我需要redis-server redis.conf 以redis.conf这个配置文件启动，才会生效刚刚的配置，然后在cli中键入save，就可以看到aof文件了，看起来redis的默认配置文件不是redis.aof啊。
